@@ -23,8 +23,8 @@ public class RestControllerTest {
 		RestTemplate restTemplate = new RestTemplate();
 		Ride ride = new Ride();
 
-		ride.setName("Wonder Flight");
-		ride.setDuration(50);
+		ride.setName("Demolition Derby");
+		ride.setDuration(180);
 
 //		restTemplate.put("http://localhost:8080/ride_tracker/ride", ride);
 		ride = restTemplate.postForObject("http://localhost:8080/ride_tracker/ride", ride, Ride.class); // post returns an object
@@ -45,5 +45,48 @@ public class RestControllerTest {
 		for (Ride ride : rides) {
 			System.out.println("Ride name: " + ride.getName());
 		}
+	}
+
+	@Test(timeout = 3000)
+	public void testGetRide() {
+		RestTemplate restTemplate = new RestTemplate();
+
+		Ride ride = restTemplate.getForObject("http://localhost:8080/ride_tracker/ride/1", Ride.class);
+
+		System.out.println("Ride name: " + ride.getName());
+	}
+
+	@Test(timeout = 3000)
+	public void testUpdateRide() {
+		RestTemplate restTemplate = new RestTemplate();
+
+		Ride ride = restTemplate.getForObject("http://localhost:8080/ride_tracker/ride/1", Ride.class);
+
+		ride.setDuration(ride.getDuration() + 10);
+
+		restTemplate.put("http://localhost:8080/ride_tracker/ride", ride);
+
+		System.out.println("Ride name: " + ride.getName());
+	}
+
+	@Test(timeout = 3000)
+	public void testBatchUpdate() {
+		RestTemplate restTemplate = new RestTemplate();
+
+		restTemplate.getForObject("http://localhost:8080/ride_tracker/batch", Object.class);
+	}
+
+	@Test(timeout = 3000)
+	public void testDelete() {
+		RestTemplate restTemplate = new RestTemplate();
+
+		restTemplate.delete("http://localhost:8080/ride_tracker/delete/5");
+	}
+
+	@Test(timeout = 3000)
+	public void testException() {
+		RestTemplate restTemplate = new RestTemplate();
+
+		restTemplate.getForObject("http://localhost:8080/ride_tracker/test", Ride.class);
 	}
 }
